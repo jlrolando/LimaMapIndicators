@@ -1,0 +1,148 @@
+library(foreign)
+library(dplyr)
+
+if (!file.exists("Pobreza.zip")) {
+      download.file("http://iinei.inei.gob.pe/iinei/srienaho/descarga/STATA/546-Modulo34.zip", 
+                    destfile = "./Pobreza.zip")
+      unzip("Pobreza.zip", exdir = "Pobreza")
+}
+
+pob<-read.dta("./Pobreza/sumaria-2016.dta")
+
+Lima<-pob[grep("^1501", pob$ubigeo),]
+
+for(i in 1:length(Lima$ubigeo)) {
+      if (Lima$ubigeo[i] == "150101") {
+            Lima$ubigeo[i] <- "Lima"
+      } else if (Lima$ubigeo[i] == "150102") {
+            Lima$ubigeo[i] <- "Ancon"
+      } else if (Lima$ubigeo[i] == "150103") {
+            Lima$ubigeo[i] <- "Ate"
+      } else if (Lima$ubigeo[i] == "150104") {
+            Lima$ubigeo[i] <- "Barranco"
+      } else if (Lima$ubigeo[i] == "150105") {
+            Lima$ubigeo[i] <- "Brena"
+      } else if (Lima$ubigeo[i] == "150106") {
+            Lima$ubigeo[i] <- "Carabayllo"
+      } else if (Lima$ubigeo[i] == "150107") {
+            Lima$ubigeo[i] <- "Chaclacayo"
+      } else if (Lima$ubigeo[i] == "150108") {
+            Lima$ubigeo[i] <- "Chorrillos"
+      } else if (Lima$ubigeo[i] == "150109") {
+            Lima$ubigeo[i] <- "Cieneguilla"
+      } else if (Lima$ubigeo[i] == "150110") {
+            Lima$ubigeo[i] <- "Comas"
+      } else if (Lima$ubigeo[i] == "150111") {
+            Lima$ubigeo[i] <- "El Agustino"
+      } else if (Lima$ubigeo[i] == "150112") {
+            Lima$ubigeo[i] <- "Independencia"
+      } else if (Lima$ubigeo[i] == "150113") {
+            Lima$ubigeo[i] <- "Jesus Maria"
+      } else if (Lima$ubigeo[i] == "150114") {
+            Lima$ubigeo[i] <- "La Molina"
+      } else if (Lima$ubigeo[i] == "150115") {
+            Lima$ubigeo[i] <- "La Victoria"
+      } else if (Lima$ubigeo[i] == "150116") {
+            Lima$ubigeo[i] <- "Lince"
+      } else if (Lima$ubigeo[i] == "150117") {
+            Lima$ubigeo[i] <- "Los Olivos"
+      } else if (Lima$ubigeo[i] == "150118") {
+            Lima$ubigeo[i] <- "Lurigancho"
+      } else if (Lima$ubigeo[i] == "150119") {
+            Lima$ubigeo[i] <- "Lurin"
+      } else if (Lima$ubigeo[i] == "150120") {
+            Lima$ubigeo[i] <- "Magdalena del Mar"
+      } else if (Lima$ubigeo[i] == "150121") {
+            Lima$ubigeo[i] <- "Pueblo Libre"
+      } else if (Lima$ubigeo[i] == "150122") {
+            Lima$ubigeo[i] <- "Miraflores"
+      } else if (Lima$ubigeo[i] == "150123") {
+            Lima$ubigeo[i] <- "Pachacamac"
+      } else if (Lima$ubigeo[i] == "150124") {
+            Lima$ubigeo[i] <- "Pucusana"
+      } else if (Lima$ubigeo[i] == "150125") {
+            Lima$ubigeo[i] <- "Puente Piedra"
+      } else if (Lima$ubigeo[i] == "150126") {
+            Lima$ubigeo[i] <- "Punta Hermosa"
+      } else if (Lima$ubigeo[i] == "150127") {
+            Lima$ubigeo[i] <- "Punta Negra"
+      } else if (Lima$ubigeo[i] == "150128") {
+            Lima$ubigeo[i] <- "Rimac"
+      } else if (Lima$ubigeo[i] == "150129") {
+            Lima$ubigeo[i] <- "San Bartolo"
+      } else if (Lima$ubigeo[i] == "150130") {
+            Lima$ubigeo[i] <- "San Borja"
+      } else if (Lima$ubigeo[i] == "150131") {
+            Lima$ubigeo[i] <- "San Isidro"
+      } else if (Lima$ubigeo[i] == "150132") {
+            Lima$ubigeo[i] <- "San Juan de Lurigancho"
+      } else if (Lima$ubigeo[i] == "150133") {
+            Lima$ubigeo[i] <- "San Juan de Miraflores"
+      } else if (Lima$ubigeo[i] == "150134") {
+            Lima$ubigeo[i] <- "San Luis"
+      } else if (Lima$ubigeo[i] == "150135") {
+            Lima$ubigeo[i] <- "San Martin de Porres"
+      } else if (Lima$ubigeo[i] == "150136") {
+            Lima$ubigeo[i] <- "San Miguel"
+      } else if (Lima$ubigeo[i] == "150137") {
+            Lima$ubigeo[i] <- "Santa Anita"
+      } else if (Lima$ubigeo[i] == "150138") {
+            Lima$ubigeo[i] <- "Santa Maria del Mar"
+      } else if (Lima$ubigeo[i] == "150139") {
+            Lima$ubigeo[i] <- "Santa Rosa"
+      } else if (Lima$ubigeo[i] == "150140") {
+            Lima$ubigeo[i] <- "Santiago de Surco"
+      } else if (Lima$ubigeo[i] == "150141") {
+            Lima$ubigeo[i] <- "Surquillo"
+      } else if (Lima$ubigeo[i] == "150142") {
+            Lima$ubigeo[i] <- "Villa El Salvador"
+      } else if (Lima$ubigeo[i] == "150143") {
+            Lima$ubigeo[i] <- "Villa Maria del Triunfo"
+      } else {next}
+}
+
+dele <-Lima$ingmo2hd>1
+Lima<-Lima[dele,]
+
+Lima.plot<-Lima %>% 
+      group_by(ubigeo) %>% 
+      summarise(gross_income = median(ingmo1hd),
+                net_income = median(ingmo2hd),
+                household_people = mean(totmieho),
+                income_recipients = mean(percepho),
+                food_expenditure = median(gru11hd),
+                clothing_expenditure = median(gru21hd),
+                health_expenditure = median(gru51hd),
+                transportation_expenditure = median(gru61hd)
+      )
+
+
+latitude<-c(-11.807917,-12.026773,-12.14375,-12.058504,-11.872352,-11.977834,
+            -12.187650,-12.11769,-11.931642,-12.048210,-11.994171,-12.075029,
+            -12.082804,-12.073624,-12.046374,-12.083708,-11.959464,-12.006649,
+            -12.252539,-12.090435,-12.111933,-12.209471,-12.482609,-12.078759,
+            -11.863822,-12.310658,-12.027461,-12.384381,-12.097285,-12.097183,
+            -11.969031,-12.153022,-12.075570,-11.981557,-12.077450,-12.047925,
+            -11.810610,-12.141128,-12.115745,-12.215773,-12.163599)
+
+longitude<-c(-77.132092,-76.889576,-77.019029,-77.050670,-77.022605,-76.773461,
+             -77.007764,-76.812033,-77.054250,-77.000509,-77.052437,-77.043529,
+             -76.929487,-77.017855,-77.042793,-77.031959,-77.076024,-76.917687,
+             -76.884048,-77.069999,-77.031538,-76.853990,-76.773382,-77.065541,
+             -77.079145,-76.813967,-77.035971,-76.770878,-76.995102,-77.032585,
+             -76.994014,-76.971839,-76.995957,-77.096882,-77.093403,-76.968625,
+             -77.165764, -76.991898,-77.019012,-76.941890,-76.944152)
+
+Lima.plot<-data_frame(district=Lima.plot$ubigeo,
+                      longitude=longitude,
+                      latitude = latitude,
+                      gross_income = Lima.plot$gross_income,
+                      net_income = Lima.plot$net_income,
+                      household_people = Lima.plot$household_people,
+                      income_recipients = Lima.plot$income_recipients,
+                      food_expenditure = Lima.plot$food_expenditure,
+                      clothing_expenditure = Lima.plot$clothing_expenditure,
+                      health_expenditure = Lima.plot$health_expenditure,
+                      transportation_expenditure = Lima.plot$transportation_expenditure)
+
+write.csv(Lima.plot, "./Lima_plot.csv", row.names = FALSE)

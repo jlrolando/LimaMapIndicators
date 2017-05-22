@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(shiny)\nlibrary(leaflet)\nlibrary(backports)\n\nshinyUI(fluidPage(\n\n  # Application title\n  titlePanel(\"Lima's Economic Indicators by District\"),\n\n  # Sidebar with a slider input for number of bins\n  sidebarLayout(\n      sidebarPanel(width = 3, \n            selectInput(\"indicator\", \"Indicator:\",\n                        c(\"Gross Income\" = \"gross_income\",\n                          \"Net Income\" = \"net_income\",\n                          \"Household People\" = \"household_people\",\n                          \"Income Recipients\" = \"income_recipients\",\n                          \"Food Expenditure\" = \"food_expenditure\",\n                          \"Clothing Expenditure\" = \"clothing_expenditure\",\n                          \"Health Expenditure\" = \"health_expenditure\",\n                          \"Transportation Expenditure\" = \"transportation_expenditure\"), \n                        selected = \"gross_income\"),\n            sliderInput(\"bin\", \"Size:\", min = 1, max = 10, value = 7)\n      ),\n\n    # Show a plot of the generated distribution\n    mainPanel(width=9, \n        leafletOutput(\"map\", width = \"100%\", height = 700)\n    )\n  )\n))\n",
+    "created" : 1495297251327.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3772568129",
+    "id" : "509A77C3",
+    "lastKnownWriteTime" : 1495481375,
+    "last_content_update" : 1495481375444,
+    "path" : "C:/Users/Jose Luis Rolando/Dropbox/PhD/R Coursera/DevelopingDataProducts/Week4/Rolando_project/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

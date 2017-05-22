@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(shiny)\nlibrary(dplyr)\nlibrary(leaflet)\nlibrary(backports)\n\nLima.plot<-read.csv(\"Lima_plot.csv\")\n\nshinyServer(function(input, output) {\n\n      output$map <- renderLeaflet({\n            Lima.plot %>% leaflet() %>% addTiles() %>%\n                  setView(lng = median(Lima.plot$longitude), \n                          lat = median(Lima.plot$latitude), zoom = 11)\n      })\n      \n      observe({\n            \n            indicatorBy<-input$indicator\n            radius = Lima.plot[[indicatorBy]] / max(Lima.plot[[indicatorBy]])\n            \n            pal <- colorFactor(\"Greens\", radius)\n            \n            if(indicatorBy == \"household_people\" | indicatorBy == \"income_recipients\") {\n                  leafletProxy(\"map\", data = Lima.plot) %>%\n                  clearShapes() %>%\n                  addCircles(weight =2, radius = radius*500*input$bin,\n                        lng = Lima.plot$longitude, lat = Lima.plot$latitude, \n                        fillColor = pal(radius), popup = paste(Lima.plot$district, \"<br>\",\n                        formatC(Lima.plot[[indicatorBy]], digits=1, \n                        format=\"f\", big.mark = \",\",\n                        decimal.mark = \".\"))) \n            } else {\n                  leafletProxy(\"map\", data = Lima.plot) %>%\n                        clearShapes() %>%\n                        addCircles(weight =2, radius = radius*500*input$bin,\n                              lng = Lima.plot$longitude, lat = Lima.plot$latitude, \n                              popup= paste(Lima.plot$district, \"<br>\", \"S/.\",\n                              formatC(Lima.plot[[indicatorBy]], digits=0, \n                              format=\"f\", big.mark = \",\",\n                              decimal.mark = \".\")))\n            }\n            \n            }) \n          \n})\n",
+    "created" : 1495297251533.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2745432154",
+    "id" : "DE0BFE7B",
+    "lastKnownWriteTime" : 1495483886,
+    "last_content_update" : 1495483886900,
+    "path" : "C:/Users/Jose Luis Rolando/Dropbox/PhD/R Coursera/DevelopingDataProducts/Week4/Rolando_project/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
