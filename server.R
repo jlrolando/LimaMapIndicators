@@ -6,15 +6,13 @@ library(backports)
 Lima.plot<-read.csv("Lima_plot.csv")
 
 shinyServer(function(input, output) {
-
       output$map <- renderLeaflet({
             Lima.plot %>% leaflet() %>% addTiles() %>%
-                  setView(lng = median(Lima.plot$longitude), 
-                          lat = median(Lima.plot$latitude), zoom = 11)
+            setView(lng = median(Lima.plot$longitude), 
+                  lat = median(Lima.plot$latitude), zoom = 11)
       })
       
       observe({
-            
             indicatorBy<-input$indicator
             radius = Lima.plot[[indicatorBy]] / max(Lima.plot[[indicatorBy]])
             
